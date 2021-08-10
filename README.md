@@ -24,7 +24,7 @@ lead_id | lead_category | current_datetime
 - Type Hinting, PSR
 - Залить код в публичный Git-репозиторий
 
-#### **Инструкция по запуску:**
+#### **Инструкция по запуску:**1
 - устанавливаем Docker
 - устанавливаем Docker-Compose
 - cd <path-to-leads.tech-test>

@@ -33,3 +33,8 @@ lead_id | lead_category | current_datetime
 #### **Просмотр файла log.txt:**
 - docker exec -ti leadstech-test_php_1 sh
 - tail -f storage/log.txt
+
+#### **Примечание:**
+После выполнения программы в лог контейнера выводится следующая информация:
+- исключенные категории
+- время выполнения

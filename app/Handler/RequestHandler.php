@@ -4,6 +4,7 @@ namespace App\Handler;
 
 use App\Writer\IWriter;
 use App\Services\LogLine;
+use App\Services\LeadCategoryException;
 
 use LeadGenerator\Lead;
 use parallel\{ Runtime, Future };
@@ -34,6 +35,11 @@ class RequestHandler
 	private $requests = [];
 
 	/**
+	 * @var array
+	 */
+	private $exceptions = [];
+
+	/**
 	 * Handler constructor.
 	 *
 	 * @param IWriter $writer
@@ -41,6 +47,7 @@ class RequestHandler
 	public function __construct( IWriter $writer )
 	{
 		$this->writer = $writer;
+		$this->exceptions = LeadCategoryException::make();
 	}
 
 	/**
@@ -66,6 +73,20 @@ class RequestHandler
 	public function setRequests( array $requests = [] ): self
 	{
 		$this->requests = $requests;
+
+		return $this;
+	}
+
+	/**
+	 * Устанавливаем исключения
+	 *
+	 * @param array $exceptions
+	 *
+	 * @return $this
+	 */
+	public function setExceptions( array $exceptions = [] ): self
+	{
+		$this->exceptions = $exceptions;
 
 		return $this;
 	}
@@ -103,9 +124,11 @@ class RequestHandler
 			foreach ( $this->futures as $index => $future ) {
 				if ( $future->done() ) {
 					$request = $future->value();
-					$logLine = new LogLine( $request[ 'id' ], $request[ 'category' ] );
 
-					$this->writer->write( $logLine );
+					if ( $request ) {
+						$logLine = new LogLine( $request[ 'id' ], $request[ 'category' ] );
+						$this->writer->write( $logLine );
+					}
 
 					unset( $this->futures[ $index ] );
 				}
@@ -129,11 +152,15 @@ class RequestHandler
 		foreach ( $package as $request ) {
 			$runtime = new Runtime();
 
-			$this->futures[] = $runtime->run( function ( int $id, string $category ) {
+			$this->futures[] = $runtime->run( function ( int $id, string $category, array $exceptions ) {
 				sleep( 2 );
 
+				if ( in_array( $category, $exceptions ) ) {
+					return false;
+				}
+
 				return [ 'id' => $id, 'category' => $category ];
-			}, [ $request->id, $request->categoryName ] );
+			}, [ $request->id, $request->categoryName, $this->exceptions ] );
 		}
 
 		return $this;

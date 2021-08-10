@@ -6,6 +6,7 @@ use App\Writer\FileWriter;
 use App\Handler\RequestHandler;
 use App\Services\ExecutionTime;
 use App\Generator\LeadGenerator;
+use App\Services\LeadCategoryException;
 
 
 /**
@@ -15,7 +16,7 @@ use App\Generator\LeadGenerator;
  */
 class Application
 {
-	private const NUMBER_OF_LEADS = 10;
+	private const NUMBER_OF_LEADS = 10000;
 	private const LOG_FILENAME = 'log.txt';
 
 	/**
@@ -32,6 +33,11 @@ class Application
 	 * @var LeadGenerator
 	 */
 	private $leadGenerator;
+
+	/**
+	 * @var array
+	 */
+	private $exceptions = [];
 
 	/**
 	 * Application constructor.
@@ -57,9 +63,12 @@ class Application
 		$this->leadGenerator->generate( self::NUMBER_OF_LEADS );
 
 		$requests = $this->leadGenerator->get();
+		$this->exceptions = LeadCategoryException::make( 2 );
+
 		$requestHandler = new RequestHandler( $this->fileWriter );
 		$requestHandler
 			->setRequests( $requests )
+			->setExceptions( $this->exceptions )
 			->run();
 
 		$this->executionTime->end();
@@ -74,6 +83,8 @@ class Application
 	 */
 	public function __toString(): string
 	{
-		return $this->executionTime;
+		$exceptions = "Category exceptions: " . implode( ', ', $this->exceptions );
+
+		return $exceptions . "\n" . $this->executionTime;
 	}
 }

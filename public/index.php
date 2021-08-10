@@ -7,4 +7,4 @@ use App\Application;
 $app = new Application();
 $app->start();
 
-echo "\n$app\n";
+echo "$app\n";

@@ -1,14 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Writer;
 
 
 /**
  * Class FileWriter
  *
- * @package App
+ * @package App\Writer
  */
-class FileWriter
+class FileWriter implements IWriter
 {
 	private const STORAGE_PATH = 'storage';
 
@@ -18,25 +18,9 @@ class FileWriter
 	private $filePath;
 
 	/**
-	 * FileWriter constructor.
-	 *
-	 * @param string $fileName
+	 * @inheritDoc
 	 */
-	public function __construct( string $fileName )
-	{
-		$this->filePath = self::STORAGE_PATH . "/$fileName";
-
-		$this->initializeFile();
-	}
-
-	/**
-	 * Пишем в файл с блокировкой
-	 *
-	 * @param string $line
-	 *
-	 * @return $this
-	 */
-	public function write( string $line ): self
+	public function write( string $line ): void
 	{
 		$file = fopen( $this->filePath, "r+" );
 
@@ -53,17 +37,19 @@ class FileWriter
 		}
 
 		fclose( $file );
-
-		return $this;
 	}
 
 	/**
 	 * Инициализируем файл
 	 *
+	 * @param string $fileName
+	 *
 	 * @return $this
 	 */
-	private function initializeFile(): self
+	public function initialize( string $fileName ): self
 	{
+		$this->filePath = self::STORAGE_PATH . "/$fileName";
+
 		fclose( fopen( $this->filePath, "w" ) );
 
 		return $this;

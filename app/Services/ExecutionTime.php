@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Services;
 
 
 /**
  * Class ExecutionTime
  *
- * @package App
+ * @package App\Services
  */
 class ExecutionTime
 {
@@ -59,7 +59,7 @@ class ExecutionTime
 	 *
 	 * @return string
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return "Execution time: " .  $this->get() . " sec.";
 	}

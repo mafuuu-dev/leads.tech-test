@@ -17,4 +17,4 @@ WORKDIR /app
 
 RUN composer install -n --ansi
 
-CMD [ "php", "./index.php" ]
+CMD [ "php", "./public/index.php" ]

@@ -1,14 +1,12 @@
 <?php
 
-namespace App;
-
-use LeadGenerator\Lead;
+namespace App\Services;
 
 
 /**
  * Class LogLine
  *
- * @package App
+ * @package App\Services
  */
 class LogLine
 {
@@ -30,12 +28,13 @@ class LogLine
 	/**
 	 * LogLine constructor.
 	 *
-	 * @param Lead $lead
+	 * @param int $id
+	 * @param string $category
 	 */
-	public function __construct( Lead $lead )
+	public function __construct( int $id, string $category )
 	{
-		$this->leadId = $lead->id;
-		$this->leadCategory = $lead->categoryName;
+		$this->leadId = $id;
+		$this->leadCategory = $category;
 
 		$this->currentTime = time();
 	}

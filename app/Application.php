@@ -1,0 +1,79 @@
+<?php
+
+namespace App;
+
+use App\Writer\FileWriter;
+use App\Handler\RequestHandler;
+use App\Services\ExecutionTime;
+use App\Generator\LeadGenerator;
+
+
+/**
+ * Class Application
+ *
+ * @package App
+ */
+class Application
+{
+	private const NUMBER_OF_LEADS = 10;
+	private const LOG_FILENAME = 'log.txt';
+
+	/**
+	 * @var FileWriter
+	 */
+	private $fileWriter;
+
+	/**
+	 * @var ExecutionTime
+	 */
+	private $executionTime;
+
+	/**
+	 * @var LeadGenerator
+	 */
+	private $leadGenerator;
+
+	/**
+	 * Application constructor.
+	 */
+	public function __construct()
+	{
+		$this->fileWriter = new FileWriter();
+		$this->executionTime = new ExecutionTime();
+		$this->leadGenerator = new LeadGenerator();
+	}
+
+	/**
+	 * Запускаем выполнение
+	 *
+	 * @return $this
+	 * @throws \Throwable
+	 */
+	public function start(): self
+	{
+		$this->executionTime->start();
+
+		$this->fileWriter->initialize( self::LOG_FILENAME );
+		$this->leadGenerator->generate( self::NUMBER_OF_LEADS );
+
+		$requests = $this->leadGenerator->get();
+		$requestHandler = new RequestHandler( $this->fileWriter );
+		$requestHandler
+			->setRequests( $requests )
+			->run();
+
+		$this->executionTime->end();
+
+		return $this;
+	}
+
+	/**
+	 * Получаем результат выполнения в виде строки
+	 *
+	 * @return string
+	 */
+	public function __toString(): string
+	{
+		return $this->executionTime;
+	}
+}

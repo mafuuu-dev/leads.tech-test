@@ -4,7 +4,6 @@ namespace App\Handler;
 
 use App\Writer\IWriter;
 use App\Services\LogLine;
-use App\Services\LeadCategoryException;
 
 use LeadGenerator\Lead;
 use parallel\{ Runtime, Future };
@@ -47,7 +46,6 @@ class RequestHandler
 	public function __construct( IWriter $writer )
 	{
 		$this->writer = $writer;
-		$this->exceptions = LeadCategoryException::make();
 	}
 
 	/**
@@ -119,8 +117,6 @@ class RequestHandler
 	private function handlingEventLoop(): self
 	{
 		do {
-			$count = count( $this->futures );
-
 			foreach ( $this->futures as $index => $future ) {
 				if ( $future->done() ) {
 					$request = $future->value();
@@ -135,7 +131,7 @@ class RequestHandler
 			}
 
 			sleep( 1 );
-		} while( $count > 0 );
+		} while( count( $this->futures ) > 0 );
 
 		return $this;
 	}

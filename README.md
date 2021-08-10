@@ -28,7 +28,7 @@ lead_id | lead_category | current_datetime
 - устанавливаем Docker
 - устанавливаем Docker-Compose
 - cd <path-to-leads.tech-test>
-- docker-compose up -d && docker-compose logs -f --tail=1
+- docker-compose up
 
 #### **Просмотр файла log.txt:**
 - docker exec -ti leadstech-test_php_1 sh

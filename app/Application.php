@@ -17,6 +17,7 @@ use App\Services\LeadCategoryException;
 class Application
 {
 	private const NUMBER_OF_LEADS = 10000;
+	private const NUMBER_OF_EXCEPTIONS = 2;
 	private const LOG_FILENAME = 'log.txt';
 
 	/**
@@ -63,7 +64,7 @@ class Application
 		$this->leadGenerator->generate( self::NUMBER_OF_LEADS );
 
 		$requests = $this->leadGenerator->get();
-		$this->exceptions = LeadCategoryException::make( 2 );
+		$this->exceptions = LeadCategoryException::make( self::NUMBER_OF_EXCEPTIONS );
 
 		$requestHandler = new RequestHandler( $this->fileWriter );
 		$requestHandler

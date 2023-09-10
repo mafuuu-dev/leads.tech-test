@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services;
+declare(strict_types=1);
 
+namespace App\Services;
 
 /**
  * Class LeadCategoryException
@@ -31,13 +32,13 @@ final class LeadCategoryException
 	 *
 	 * @return array
 	 */
-	public static function make( int $count = 0 ): array
+	public static function make(int $count = 0): array
 	{
-		$randomIndexes = $count ? array_rand( self::LEAD_CATEGORIES, $count ) : [];
+		$randomIndexes = $count ? array_rand(self::LEAD_CATEGORIES, $count) : [];
 
 		$randomCategories = [];
-		foreach ( $randomIndexes as $index ) {
-			$randomCategories[] = self::LEAD_CATEGORIES[ $index ];
+		foreach ($randomIndexes as $index) {
+			$randomCategories[] = self::LEAD_CATEGORIES[$index];
 		}
 
 		return $randomCategories;

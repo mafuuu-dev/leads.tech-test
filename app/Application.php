@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
 use App\Writer\FileWriter;
@@ -7,7 +9,6 @@ use App\Handler\RequestHandler;
 use App\Services\ExecutionTime;
 use App\Generator\LeadGenerator;
 use App\Services\LeadCategoryException;
-
 
 /**
  * Class Application
@@ -60,16 +61,16 @@ class Application
 	{
 		$this->executionTime->start();
 
-		$this->fileWriter->initialize( self::LOG_FILENAME );
-		$this->leadGenerator->generate( self::NUMBER_OF_LEADS );
+		$this->fileWriter->initialize(self::LOG_FILENAME);
+		$this->leadGenerator->generate(self::NUMBER_OF_LEADS);
 
 		$requests = $this->leadGenerator->get();
-		$this->exceptions = LeadCategoryException::make( self::NUMBER_OF_EXCEPTIONS );
+		$this->exceptions = LeadCategoryException::make(self::NUMBER_OF_EXCEPTIONS);
 
-		$requestHandler = new RequestHandler( $this->fileWriter );
+		$requestHandler = new RequestHandler($this->fileWriter);
 		$requestHandler
-			->setRequests( $requests )
-			->setExceptions( $this->exceptions )
+			->setRequests($requests)
+			->setExceptions($this->exceptions)
 			->run();
 
 		$this->executionTime->end();
@@ -84,7 +85,7 @@ class Application
 	 */
 	public function __toString(): string
 	{
-		$exceptions = "Category exceptions: " . implode( ', ', $this->exceptions );
+		$exceptions = "Category exceptions: " . implode(', ', $this->exceptions);
 
 		return $exceptions . "\n" . $this->executionTime;
 	}

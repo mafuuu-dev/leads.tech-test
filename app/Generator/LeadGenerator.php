@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Generator;
 
-use LeadGenerator\{ Generator, Lead };
-
+use LeadGenerator\{Generator, Lead};
 
 /**
  * Class LeadGenerator
@@ -28,12 +29,12 @@ class LeadGenerator implements IGenerator
 	/**
 	 * @inheritDoc
 	 */
-	public function generate( int $count = 0 ): void
+	public function generate(int $count = 0): void
 	{
 		$generator = new Generator();
 
-		$generator->generateLeads( $count, function ( Lead $lead ) {
+		$generator->generateLeads($count, function (Lead $lead) {
 			$this->leads[] = $lead;
-		} );
+		});
 	}
 }

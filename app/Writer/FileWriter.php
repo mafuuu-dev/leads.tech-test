@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Writer;
+declare(strict_types=1);
 
+namespace App\Writer;
 
 /**
  * Class FileWriter
@@ -20,23 +21,23 @@ class FileWriter implements IWriter
 	/**
 	 * @inheritDoc
 	 */
-	public function write( string $line ): void
+	public function write(string $line): void
 	{
-		$file = fopen( $this->filePath, "r+" );
+		$file = fopen($this->filePath, "r+");
 
-		while ( true ) {
-			if ( flock( $file, LOCK_EX ) ) {
-				fseek( $file, 0, SEEK_END );
-				fwrite( $file, $line );
-				flock( $file, LOCK_UN );
+		while (true) {
+			if (flock($file, LOCK_EX)) {
+				fseek($file, 0, SEEK_END);
+				fwrite($file, $line);
+				flock($file, LOCK_UN);
 
 				break;
 			}
 
-			sleep( 1 );
+			sleep(1);
 		}
 
-		fclose( $file );
+		fclose($file);
 	}
 
 	/**
@@ -46,11 +47,11 @@ class FileWriter implements IWriter
 	 *
 	 * @return $this
 	 */
-	public function initialize( string $fileName ): self
+	public function initialize(string $fileName): self
 	{
 		$this->filePath = self::STORAGE_PATH . "/$fileName";
 
-		fclose( fopen( $this->filePath, "w" ) );
+		fclose(fopen($this->filePath, "w"));
 
 		return $this;
 	}

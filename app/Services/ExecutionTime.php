@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services;
+declare(strict_types=1);
 
+namespace App\Services;
 
 /**
  * Class ExecutionTime
@@ -51,7 +52,7 @@ class ExecutionTime
 	 */
 	public function get(): float
 	{
-		return round( $this->end - $this->start, 3 );
+		return round($this->end - $this->start, 3);
 	}
 
 	/**

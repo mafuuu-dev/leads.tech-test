@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Handler;
 
 use App\Writer\IWriter;
 use App\Services\LogLine;
 
 use LeadGenerator\Lead;
-use parallel\{ Runtime, Future };
-
+use parallel\{Runtime, Future};
 
 /**
  * Class Handler
@@ -43,7 +44,7 @@ class RequestHandler
 	 *
 	 * @param IWriter $writer
 	 */
-	public function __construct( IWriter $writer )
+	public function __construct(IWriter $writer)
 	{
 		$this->writer = $writer;
 	}
@@ -68,7 +69,7 @@ class RequestHandler
 	 *
 	 * @return self
 	 */
-	public function setRequests( array $requests = [] ): self
+	public function setRequests(array $requests = []): self
 	{
 		$this->requests = $requests;
 
@@ -82,7 +83,7 @@ class RequestHandler
 	 *
 	 * @return $this
 	 */
-	public function setExceptions( array $exceptions = [] ): self
+	public function setExceptions(array $exceptions = []): self
 	{
 		$this->exceptions = $exceptions;
 
@@ -97,11 +98,11 @@ class RequestHandler
 	 */
 	private function handlingPackages(): self
 	{
-		$packages = array_chunk( $this->requests, self::PACKAGE_LIMIT );
+		$packages = array_chunk($this->requests, self::PACKAGE_LIMIT);
 
-		foreach ( $packages as $package ) {
+		foreach ($packages as $package) {
 			$this
-				->handlingPackage( $package )
+				->handlingPackage($package)
 				->handlingEventLoop();
 		}
 
@@ -117,21 +118,21 @@ class RequestHandler
 	private function handlingEventLoop(): self
 	{
 		do {
-			foreach ( $this->futures as $index => $future ) {
-				if ( $future->done() ) {
+			foreach ($this->futures as $index => $future) {
+				if ($future->done()) {
 					$request = $future->value();
 
-					if ( $request ) {
-						$logLine = new LogLine( $request[ 'id' ], $request[ 'category' ] );
-						$this->writer->write( $logLine );
+					if ($request) {
+						$logLine = new LogLine($request['id'], $request['category']);
+						$this->writer->write((string) $logLine);
 					}
 
-					unset( $this->futures[ $index ] );
+					unset($this->futures[$index]);
 				}
 			}
 
-			sleep( 1 );
-		} while( count( $this->futures ) > 0 );
+			sleep(1);
+		} while(count($this->futures) > 0);
 
 		return $this;
 	}
@@ -143,20 +144,20 @@ class RequestHandler
 	 *
 	 * @return self
 	 */
-	private function handlingPackage( array $package = [] ): self
+	private function handlingPackage(array $package = []): self
 	{
-		foreach ( $package as $request ) {
+		foreach ($package as $request) {
 			$runtime = new Runtime();
 
-			$this->futures[] = $runtime->run( function ( int $id, string $category, array $exceptions ) {
-				sleep( 2 );
+			$this->futures[] = $runtime->run(function (int $id, string $category, array $exceptions) {
+				sleep(2);
 
-				if ( in_array( $category, $exceptions ) ) {
+				if (in_array( $category, $exceptions)) {
 					return false;
 				}
 
-				return [ 'id' => $id, 'category' => $category ];
-			}, [ $request->id, $request->categoryName, $this->exceptions ] );
+				return ['id' => $id, 'category' => $category];
+			}, [$request->id, $request->categoryName, $this->exceptions]);
 		}
 
 		return $this;

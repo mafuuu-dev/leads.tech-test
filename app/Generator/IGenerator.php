@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Generator;
+declare(strict_types=1);
 
+namespace App\Generator;
 
 /**
  * Interface IGenerator
@@ -24,5 +25,5 @@ interface IGenerator
 	 *
 	 * @return void
 	 */
-	public function generate( int $count = 0 ): void;
+	public function generate(int $count = 0): void;
 }

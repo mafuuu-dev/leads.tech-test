@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services;
+declare(strict_types=1);
 
+namespace App\Services;
 
 /**
  * Class LogLine
@@ -31,7 +32,7 @@ class LogLine
 	 * @param int $id
 	 * @param string $category
 	 */
-	public function __construct( int $id, string $category )
+	public function __construct(int $id, string $category)
 	{
 		$this->leadId = $id;
 		$this->leadCategory = $category;

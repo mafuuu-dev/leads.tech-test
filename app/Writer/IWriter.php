@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Writer;
+declare(strict_types=1);
 
+namespace App\Writer;
 
 /**
  * Interface IWriter
@@ -17,5 +18,5 @@ interface IWriter
 	 *
 	 * @return void
 	 */
-	public function write( string $line ): void;
+	public function write(string $line): void;
 }
